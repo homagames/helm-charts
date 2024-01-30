@@ -1,0 +1,99 @@
+# Default values for changeWatch-exporter.
+
+
+image:
+  repository: ghcr.io/homagames/changewatch-exporter
+  pullPolicy: IfNotPresent
+  # If supplied, this overrides "appVersion"
+  tag: ""
+
+replicaCount: 1
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9999"
+  prometheus.io/path: "/metrics"
+  prometheus.io/scheme: "http"
+
+# Security items common to everything in the pod.  Here we require that it
+# does not run as the user defined in the image, literally named "nonroot".
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+
+# Security items for one container. We lock it down.
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+# Default affinity is to spread out over nodes; use this to override.
+affinity: {}
+
+
+config:
+  loglevel: debug
+  mode: daemon
+  prometheus:
+    path: /metrics
+    port: 9999
+  monitors:
+    - kind: FormatedRemoteFile
+      apiVersion: v1
+      metadata:
+        name: mysql
+      spec:
+        url:  https://raw.githubusercontent.com/bitnami/charts/main/bitnami/mysql/Chart.yaml
+        version: 8.0.25
+        # version: 9.16.1
+        format: yaml
+        key: version
+    - kind: FormatedRemoteFile
+      apiVersion: v1
+      metadata:
+        name: redis
+      spec:
+        url:  https://raw.githubusercontent.com/bitnami/charts/main/bitnami/redis/Chart.yaml
+        version: 18.6.3
+        # version: 9.16.1
+        format: yaml
+        key: version
+    - kind: GithubRelease
+      apiVersion: v1
+      metadata:
+        name: helm
+      spec:
+        repo:  helm
+        org: helm
+        version: v3.13.2
+    - kind: GithubRelease
+      apiVersion: v1
+      metadata:
+        name: github_cli
+      spec:
+        repo:  cli
+        org: cli
+        version: v2.40.0
+

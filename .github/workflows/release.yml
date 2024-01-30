@@ -1,0 +1,51 @@
+# Action to test and release the helm chart
+---
+name: release
+on:
+  - push
+defaults:
+  run:
+    shell: bash
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Helm
+      uses: azure/setup-helm@v3
+    - name: Test Helm Chart
+      run: |
+        ## Looup for chart in ./charts
+        for chart in $(ls -d charts/*/); do
+          cd $chart
+          helm lint
+          helm template $(basename $chart) .
+          cd -
+        done
+  release:
+    permissions:
+      contents: write
+    needs: 
+      - test
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

@@ -1,0 +1,17 @@
+apiVersion: v2
+description: Helm chart for changewatch-exporter
+name: changewatch-exporter
+version: 0.1.0
+appVersion: 0.1.0
+maintainers:
+  - name: alexbescond
+    url: https://github.com/alexbescond
+sources:
+  - https://github.com/homagames/changewatch-exporter-helm
+  - https://github.com/homagames/changewatch-exporter
+keywords:
+  - prometheus
+  - exporter
+  - changewatch
+  - helm
+  - dependency
