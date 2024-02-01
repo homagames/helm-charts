@@ -59,41 +59,21 @@ config:
   prometheus:
     path: /metrics
     port: 9999
-  monitors:
-    - kind: FormatedRemoteFile
-      apiVersion: v1
-      metadata:
-        name: mysql
-      spec:
-        url:  https://raw.githubusercontent.com/bitnami/charts/main/bitnami/mysql/Chart.yaml
-        version: 8.0.25
-        # version: 9.16.1
-        format: yaml
-        key: version
-    - kind: FormatedRemoteFile
-      apiVersion: v1
-      metadata:
-        name: redis
-      spec:
-        url:  https://raw.githubusercontent.com/bitnami/charts/main/bitnami/redis/Chart.yaml
-        version: 18.6.3
-        # version: 9.16.1
-        format: yaml
-        key: version
-    - kind: GithubRelease
-      apiVersion: v1
-      metadata:
-        name: helm
-      spec:
-        repo:  helm
-        org: helm
-        version: v3.13.2
-    - kind: GithubRelease
-      apiVersion: v1
-      metadata:
-        name: github_cli
-      spec:
-        repo:  cli
-        org: cli
-        version: v2.40.0
-
+  monitors: []
+    # - kind: FormatedRemoteFile
+    #   apiVersion: v1
+    #   metadata:
+    #     name: helm-changewatch-exporter
+    #   spec:
+    #     url:  https://raw.githubusercontent.com/homagames/helm-charts/master/charts/changewatch-exporter/Chart.yaml
+    #     version: 0.1.0
+    #     format: yaml
+    #     key: version
+    # - kind: GithubRelease
+    #   apiVersion: v1
+    #   metadata:
+    #     name: changewatch-exporter
+    #   spec:
+    #     repo:  changewatch-exporter
+    #     org: homagames
+    #     version: v0.1.1
