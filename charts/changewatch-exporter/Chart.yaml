@@ -1,8 +1,8 @@
 apiVersion: v2
 description: Helm chart for changewatch-exporter
 name: changewatch-exporter
-version: 0.1.0
-appVersion: 0.1.0
+version: 0.1.1
+appVersion: 0.1.1
 maintainers:
   - name: alexbescond
     url: https://github.com/alexbescond
